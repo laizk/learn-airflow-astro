@@ -1,9 +1,7 @@
 from airflow.sdk import dag, task
-from airflow.providers.standard.operators.python import PythonOperator
 from pendulum import datetime
 
-def _task_a():
-    print("Hello, Airflow!")
+
 
 @dag(
     schedule="@daily",
@@ -13,9 +11,11 @@ def _task_a():
     max_consecutive_failed_dag_runs=3
 )
 def my_dag():
-    task_a = PythonOperator(
-        task_id="task_a",
-        python_callable=_task_a
-    )
+    
+    @task
+    def task_a():
+        print("Hello, Airflow!")
+        
+    task_a()
     
 my_dag()
