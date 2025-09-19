@@ -31,5 +31,5 @@ def my_dag():
     def task_d():
         print("Hello, from task D!")
                 
-    task_a() >> task_b() >> task_c() >> task_d()
+    task_a() >> task_b() >> [task_c(), task_d()]
 my_dag()
