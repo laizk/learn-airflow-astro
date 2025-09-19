@@ -1,4 +1,4 @@
-from airflow.sdk import dag, task
+from airflow.sdk import dag, task, chain
 from pendulum import datetime
 
 default_args ={
@@ -34,8 +34,6 @@ def my_dag():
     @task
     def task_e():
         print("Hello, from task E!")        
-                
-    a = task_a()
-    a >> task_b() >> task_c()
-    a >> task_d() >> task_e()
+                    
+    chain(task_a(), [task_b(), task_d()], [task_c(), task_e()])
 my_dag()
