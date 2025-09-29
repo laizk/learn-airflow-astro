@@ -5,15 +5,24 @@ def xcom_dag():
     
     @task
     def task_a(ti):
-        val = 42
+        val = {
+            "val_1": 42,
+            "val_2" : 43
+        }
         ti.xcom_push(key="my_key", value=val)
         
+     
+    @task
+    def task_c(ti):
+        val = 43
+        ti.xcom_push(key="my_key", value=val)   
         
     @task
     def task_b(ti):
-        ti.xcom_pull(task_ids="task_a", key="my_key")
+        vals = ti.xcom_pull(task_ids=["task_a", "task_c"], key="my_key")
+        print(vals)
     
-    task_a() >> task_b()
+    task_a() >> task_c() >>task_b()
     
     
 xcom_dag()
