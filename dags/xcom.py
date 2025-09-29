@@ -6,15 +6,15 @@ def xcom_dag():
     @task
     def task_a(**context: Context):
         val = 42
-        context['ti'].xcom_push(key='my_key', value = val)
+        return val # equivalent to context['ti'].xcom_push(key='my_key', value = val)
         
         
     @task
-    def task_b(**context: Context):
-        val = context['ti'].xcom_pull(task_ids='task_a', key='my_key')
-        print(val)
-        
-    task_a() >> task_b()
+    def task_b(value: int):
+        print(value)
+    
+    val = task_a()
+    task_b(val)
     
     
 xcom_dag()
