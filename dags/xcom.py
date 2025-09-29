@@ -4,17 +4,16 @@ from airflow.sdk import dag, task, Context
 def xcom_dag():
     
     @task
-    def task_a(**context: Context):
+    def task_a(ti):
         val = 42
-        return val # equivalent to context['ti'].xcom_push(key='my_key', value = val)
+        ti.xcom_push(key="my_key", value=val)
         
         
     @task
-    def task_b(value: int):
-        print(value)
+    def task_b(ti):
+        ti.xcom_pull(task_ids="task_a", key="my_key")
     
-    val = task_a()
-    task_b(val)
+    task_a() >> task_b()
     
     
 xcom_dag()
